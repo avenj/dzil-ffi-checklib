@@ -22,19 +22,11 @@ has $_ => (
   handles => { $_ => 'elements' },
 ) for @list_options;
 
-my @string_options = qw(debug);
-has \@string_options => (
-  is => 'ro', isa => 'Str',
-);
-
 around dump_config => sub {
   my ($orig, $self) = @_;
   my $config = $self->$orig;
 
-  $config->{+__PACKAGE__} = +{
-    ( map {; $_ => [ $self->$_ ] } @list_options ),
-    ( map {; $_ => $self->$_ } @string_options ),
-  };
+  $config->{+__PACKAGE__} = +{ map {; $_ => [ $self->$_ ] } @list_options };
 
   $config
 };
@@ -102,23 +94,13 @@ sub _munge_file
     unless $orig_content =~ m/use strict;\nuse warnings;\n\n/g;
   my $pos = pos($orig_content);
 
-  my @options = (
-    (
-      map {;
-        my @stuff = map { '\'' . $_ . '\'' } $self->$_;
-        @stuff ? 
-          [ 
-            $_ => @stuff > 1 ? ('[ ' . join(', ', @stuff) . ' ]') : $stuff[0]
-          ] : ()
-      } @list_options
-    ),
-
-    (
-      map {;
-        defined $self->$_ ? [ $_ => '\'' . $self->$_ . '\'' ] : ()
-      } @string_options
-    ),
-  );
+  my @options = map {;
+    my @stuff = map { '\'' . $_ . '\'' } $self->$_;
+    @stuff ? 
+      [ 
+        $_ => @stuff > 1 ? ('[ ' . join(', ', @stuff) . ' ]') : $stuff[0]
+      ] : ()
+  } @list_options;
 
   $file->content(
     substr($orig_content, 0, $pos)
@@ -178,16 +160,6 @@ suffix as needed.
 =head2 C<libpath>
 
 Additional path to search for libraries. Can be used more than once.
-
-=head2 C<debug>
-
-If true, emit information during processing that can be used for debugging.
-B<Note>: as this is an arbitrary string that is inserted directly into
-F<Makefile.PL> or F<Build.PL>, this can be any arbitrary expression,
-for example:
-
-    [FFI::CheckLib]
-    debug = $ENV{AUTOMATED_TESTING} || $^O eq 'MSWin32'
 
 =head1 SEE ALSO
 
