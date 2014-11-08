@@ -1,5 +1,5 @@
-use strict; use warnings;
 package Dist::Zilla::Plugin::FFI::CheckLib;
+use strict; use warnings;
 
 use Moose;
 with
@@ -8,7 +8,6 @@ with
   'Dist::Zilla::Role::PrereqSource',
 ;
 
-use Scalar::Util 'blessed';
 use namespace::autoclean;
 
 my @list_options = qw/lib libpath symbol/;
@@ -32,7 +31,7 @@ around dump_config => sub {
 };
 
 sub register_prereqs {
-  my $self = shift;
+  my ($self) = @_;
   $self->zilla->register_prereqs( +{
       phase => 'configure',
       type  => 'requires',
@@ -43,7 +42,7 @@ sub register_prereqs {
 
 my %files;
 sub munge_files {
-  my $self = shift;
+  my ($self) = @_;
 
   my @mfpl = grep 
     {; $_->name eq 'Makefile.PL' or $_->name eq 'Build.PL' } 
@@ -59,7 +58,7 @@ sub munge_files {
 }
 
 sub setup_installer {
-  my $self = shift;
+  my ($self) = @_;
 
   my @mfpl = grep 
     {; $_->name eq 'Makefile.PL' or $_->name eq 'Build.PL' } 
