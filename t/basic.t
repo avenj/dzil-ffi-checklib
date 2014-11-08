@@ -19,6 +19,7 @@ my $tzil = Builder->from_config(
                 [ 'FFI::CheckLib' => {
                         lib => [ qw(iconv jpeg) ],
                         libpath => 'additional_path',
+                        symbol => [ qw(foo bar) ],
                     },
                 ],
             ),
@@ -52,6 +53,7 @@ use FFI::CheckLib;
 check_lib_or_exit(
     lib => [ 'iconv', 'jpeg' ],
     libpath => 'additional_path',
+    symbol => [ 'foo', 'bar' ],
 );
 PATTERN
 
@@ -81,6 +83,7 @@ cmp_deeply(
                         'Dist::Zilla::Plugin::FFI::CheckLib' => superhashof({
                             lib => [ 'iconv', 'jpeg' ],
                             libpath => [ 'additional_path' ],
+                            symbol => [ 'foo', 'bar' ],
                         }),
                     },
                     name => 'FFI::CheckLib',

@@ -136,7 +136,7 @@ In your F<dist.ini>:
 
 This is a L<Dist::Zilla> plugin that modifies the F<Makefile.PL> or
 F<Build.PL> in your distribution to check for a dynamic library L<FFI::Raw> (or
-similar) can access. Uses L<FFI::CheckLib>.
+similar) can access; uses L<FFI::CheckLib> to perform the check.
 
 If the library is not available, the program exits with a status of zero,
 which will result in a NA result on a L<CPAN Testers|cpantesters.org> machine.
@@ -152,7 +152,8 @@ All options are as documented in L<FFI::CheckLib>:
 
 =head2 C<lib>
 
-A string with the name of a single library name. Can be used more than once.
+The name of a single dynamic library (for example, C<zmq>). 
+Can be used more than once.
 
 L<FFI::CheckLib> will prepend C<lib> and append an appropriate dynamic library
 suffix as needed.
@@ -160,6 +161,10 @@ suffix as needed.
 =head2 C<libpath>
 
 Additional path to search for libraries. Can be used more than once.
+
+=head2 C<symbol>
+
+A symbol that must be found. Can be used more than once.
 
 =head1 SEE ALSO
 
