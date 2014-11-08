@@ -139,7 +139,7 @@ F<Build.PL> in your distribution to check for a dynamic library L<FFI::Raw> (or
 similar) can access; uses L<FFI::CheckLib> to perform the check.
 
 If the library is not available, the program exits with a status of zero,
-which will result in a NA result on a L<CPAN Testers|cpantesters.org> machine.
+which will result in a NA result on a CPAN test reporter.
 
 Derived from L<Dist::Zilla::Plugin::CheckLib> (see L</AUTHOR>) -- look there
 for non-FFI applications.
@@ -181,10 +181,6 @@ L<Devel::CheckLib> and L<Dist::Zilla::Plugin::CheckLib>
 =item *
 
 L<Devel::AssertOS> and L<Dist::Zilla::Plugin::AssertOS>
-
-=item *
-
-L<Devel::CheckBin> and L<Dist::Zilla::Plugin::CheckBin>
 
 =back
 
