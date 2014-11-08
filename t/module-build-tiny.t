@@ -1,6 +1,8 @@
 use strict;
 use warnings FATAL => 'all';
 
+# Ported from Dist::Zilla::Plugin::CheckLib (C) 2014 Karen Etheridge
+
 use Test::Requires { 'Dist::Zilla::Plugin::ModuleBuildTiny' => '0.007' };
 
 use Path::Tiny;

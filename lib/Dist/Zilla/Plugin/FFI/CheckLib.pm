@@ -11,7 +11,7 @@ with
 use Scalar::Util 'blessed';
 use namespace::autoclean;
 
-my @list_options = qw(lib libpath symbol);
+my @list_options = qw/lib libpath symbol/;
 sub mvp_multivalue_args { @list_options }
 
 has $_ => (
@@ -31,8 +31,7 @@ around dump_config => sub {
   $config
 };
 
-sub register_prereqs
-{
+sub register_prereqs {
   my $self = shift;
   $self->zilla->register_prereqs( +{
       phase => 'configure',
@@ -43,8 +42,7 @@ sub register_prereqs
 }
 
 my %files;
-sub munge_files
-{
+sub munge_files {
   my $self = shift;
 
   my @mfpl = grep 
@@ -60,8 +58,7 @@ sub munge_files
   ()
 }
 
-sub setup_installer
-{
+sub setup_installer {
   my $self = shift;
 
   my @mfpl = grep 
@@ -77,7 +74,7 @@ sub setup_installer
   }
 
   for my $mfpl (@mfpl) {
-    next if exists $files{$mfpl->name};
+    next if exists $files{ $mfpl->name };
     $self->log_debug('munging ' . $mfpl->name . ' in setup_installer phase');
     $self->_munge_file($mfpl);
   }
@@ -85,8 +82,7 @@ sub setup_installer
   ()
 }
 
-sub _munge_file
-{
+sub _munge_file {
   my ($self, $file) = @_;
 
   my $orig_content = $file->content;

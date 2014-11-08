@@ -1,6 +1,8 @@
 use strict; use warnings FATAL => 'all';
 use Test::More;
 
+# Ported from Dist::Zilla::Plugin::CheckLib (C) 2014 Karen Etheridge
+
 use Test::DZil;
 use Test::Deep;
 use Test::Fatal;

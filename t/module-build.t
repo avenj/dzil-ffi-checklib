@@ -1,6 +1,8 @@
 use strict;
 use warnings FATAL => 'all';
 
+# Ported from Dist::Zilla::Plugin::CheckLib (C) 2014 Karen Etheridge
+
 use Path::Tiny;
 my $code = path('t', 'basic.t')->slurp_utf8;
 
