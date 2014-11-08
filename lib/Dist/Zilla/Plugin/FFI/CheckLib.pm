@@ -95,7 +95,7 @@ sub _munge_file
   my $pos = pos($orig_content);
 
   my @options = map {;
-    my @stuff = map { '\'' . $_ . '\'' } $self->$_;
+    my @stuff = map {; '\'' . $_ . '\'' } $self->$_;
     @stuff ? 
       [ 
         $_ => @stuff > 1 ? ('[ ' . join(', ', @stuff) . ' ]') : $stuff[0]
