@@ -15,10 +15,10 @@ my @list_options = qw(lib libpath symbol);
 sub mvp_multivalue_args { @list_options }
 
 has $_ => (
-  isa => 'ArrayRef[Str]',
-  lazy => 1,
+  isa     => 'ArrayRef[Str]',
+  lazy    => 1,
   default => sub { [] },
-  traits => ['Array'],
+  traits  => ['Array'],
   handles => { $_ => 'elements' },
 ) for @list_options;
 
@@ -31,9 +31,9 @@ around dump_config => sub {
   my ($orig, $self) = @_;
   my $config = $self->$orig;
 
-  $config->{+__PACKAGE__} = {
-      ( map { $_ => [ $self->$_ ] } @list_options ),
-      ( map { $_ => $self->$_ } @string_options ),
+  $config->{+__PACKAGE__} = +{
+    ( map {; $_ => [ $self->$_ ] } @list_options ),
+    ( map {; $_ => $self->$_ } @string_options ),
   };
 
   $config
@@ -42,8 +42,7 @@ around dump_config => sub {
 sub register_prereqs
 {
   my $self = shift;
-  $self->zilla->register_prereqs(
-    {
+  $self->zilla->register_prereqs( +{
       phase => 'configure',
       type  => 'requires',
     },
@@ -56,31 +55,42 @@ sub munge_files
 {
   my $self = shift;
 
-  my @mfpl = grep { $_->name eq 'Makefile.PL' or $_->name eq 'Build.PL' } @{ $self->zilla->files };
-  for my $mfpl (@mfpl)
-  {
-      $self->log_debug('munging ' . $mfpl->name . ' in file gatherer phase');
-      $files{$mfpl->name} = $mfpl;
-      $self->_munge_file($mfpl);
+  my @mfpl = grep 
+    {; $_->name eq 'Makefile.PL' or $_->name eq 'Build.PL' } 
+      @{ $self->zilla->files };
+
+  for my $mfpl (@mfpl) {
+    $self->log_debug('munging ' . $mfpl->name . ' in file gatherer phase');
+    $files{ $mfpl->name } = $mfpl;
+    $self->_munge_file($mfpl);
   }
-  return;
+
+  ()
 }
 
 sub setup_installer
 {
   my $self = shift;
 
-  my @mfpl = grep { $_->name eq 'Makefile.PL' or $_->name eq 'Build.PL' } @{ $self->zilla->files };
+  my @mfpl = grep 
+    {; $_->name eq 'Makefile.PL' or $_->name eq 'Build.PL' } 
+      @{ $self->zilla->files };
 
-  $self->log_fatal('No Makefile.PL or Build.PL was found. [FFI::CheckLib] should appear in dist.ini after [MakeMaker] or variant!') unless @mfpl;
-
-  for my $mfpl (@mfpl)
-  {
-      next if exists $files{$mfpl->name};
-      $self->log_debug('munging ' . $mfpl->name . ' in setup_installer phase');
-      $self->_munge_file($mfpl);
+  unless (@mfpl) {
+    $self->log_fatal(
+      'No Makefile.PL or Build.PL was found.'
+      .' [FFI::CheckLib] should appear in dist.ini'
+      .' after [MakeMaker] or variant!'
+    );
   }
-  return;
+
+  for my $mfpl (@mfpl) {
+    next if exists $files{$mfpl->name};
+    $self->log_debug('munging ' . $mfpl->name . ' in setup_installer phase');
+    $self->_munge_file($mfpl);
+  }
+
+  ()
 }
 
 sub _munge_file
@@ -89,35 +99,37 @@ sub _munge_file
 
   my $orig_content = $file->content;
   $self->log_fatal('could not find position in ' . $file->name . ' to modify!')
-      if not $orig_content =~ m/use strict;\nuse warnings;\n\n/g;
-
+    unless $orig_content =~ m/use strict;\nuse warnings;\n\n/g;
   my $pos = pos($orig_content);
 
-  # build a list of tuples: field name => string
   my @options = (
-      (map {
-          my @stuff = map { '\'' . $_ . '\'' } $self->$_;
-          @stuff
-              ? [ $_ => @stuff > 1 ? ('[ ' . join(', ', @stuff) . ' ]') : $stuff[0] ]
-              : ()
-      } @list_options),
-      (map {
-          defined $self->$_
-              ? [ $_ => '\'' . $self->$_ . '\'' ]
-              : ()
-      } @string_options),
+    (
+      map {;
+        my @stuff = map { '\'' . $_ . '\'' } $self->$_;
+        @stuff ? 
+          [ 
+            $_ => @stuff > 1 ? ('[ ' . join(', ', @stuff) . ' ]') : $stuff[0]
+          ] : ()
+      } @list_options
+    ),
+
+    (
+      map {;
+        defined $self->$_ ? [ $_ => '\'' . $self->$_ . '\'' ] : ()
+      } @string_options
+    ),
   );
 
   $file->content(
-      substr($orig_content, 0, $pos)
-      . "# inserted by " . blessed($self) . ' ' . ($self->VERSION || '<self>') . "\n"
-      . "use FFI::CheckLib;\n"
-      . "check_lib_or_exit(\n"
-      . join('',
-              map { '    ' . $_->[0] . ' => ' . $_->[1] . ",\n" } @options
-          )
-      . ");\n\n"
-      . substr($orig_content, $pos)
+    substr($orig_content, 0, $pos)
+    . "# inserted by " . blessed($self) . ' ' . ($self->VERSION || '<self>') . "\n"
+    . "use FFI::CheckLib;\n"
+    . "check_lib_or_exit(\n"
+    . join('',
+            map { ' 'x4 . $_->[0] . ' => ' . $_->[1] . ",\n" } @options
+        )
+    . ");\n\n"
+    . substr($orig_content, $pos)
   );
 }
 
@@ -201,7 +213,7 @@ L<Devel::CheckBin> and L<Dist::Zilla::Plugin::CheckBin>
 
 =head1 AUTHOR
 
-Jon Portnoy <avenj@cobaltirc.org>
+Ported to L<FFI::CheckLib> by Jon Portnoy <avenj@cobaltirc.org>
 
 This module is adapted directly from L<Dist::Zilla::Plugin::CheckLib>,
 copyright (c) 2014 by Karen Etheridge (CPAN: ETHER).
