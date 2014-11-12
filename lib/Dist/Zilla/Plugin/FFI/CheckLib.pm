@@ -98,13 +98,12 @@ sub _munge_file {
   } @list_options;
 
   $file->content(
-    substr($orig_content, 0, $pos)
-    . "# inserted by " . blessed($self) . ' ' . ($self->VERSION || '<self>') . "\n"
+      substr($orig_content, 0, $pos)
+    . "# inserted by " . blessed($self)
+    . ' ' . ($self->VERSION || '<self>') . "\n"
     . "use FFI::CheckLib;\n"
     . "check_lib_or_exit(\n"
-    . join('',
-            map { ' 'x4 . $_->[0] . ' => ' . $_->[1] . ",\n" } @options
-        )
+    . join('', map {; ' 'x4 . $_->[0] . ' => ' . $_->[1] . ",\n" } @options )
     . ");\n\n"
     . substr($orig_content, $pos)
   );
