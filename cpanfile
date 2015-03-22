@@ -4,7 +4,7 @@ requires "Moose"         => "0";
 requires "namespace::autoclean" => "0";
 
 requires "Dist::Zilla"   => "5";
-requires "FFI::CheckLib" => "0.03";
+requires "FFI::CheckLib" => "0.11";
 
 on 'test'      => sub {
   requires "Test::More" => "0.88";

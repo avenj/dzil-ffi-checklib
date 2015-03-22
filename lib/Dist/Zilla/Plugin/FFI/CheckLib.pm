@@ -10,7 +10,13 @@ with
 
 use namespace::autoclean;
 
-my @list_options = qw/lib libpath symbol/;
+my @list_options = qw/
+  lib
+  libpath
+  symbol
+  systempath
+/;
+# FIXME recursive opt
 sub mvp_multivalue_args { @list_options }
 
 has $_ => (
@@ -36,7 +42,7 @@ sub register_prereqs {
       phase => 'configure',
       type  => 'requires',
     },
-    'FFI::CheckLib' => '0.03',
+    'FFI::CheckLib' => '0.11',
   );
 }
 
@@ -151,6 +157,11 @@ Can be used more than once.
 
 L<FFI::CheckLib> will prepend C<lib> and append an appropriate dynamic library
 suffix as needed.
+
+=head2 C<systempath>
+
+The system search path to use (instead of letting L<FFI::CheckLib> determine
+paths). Can be used more than once.
 
 =head2 C<libpath>
 

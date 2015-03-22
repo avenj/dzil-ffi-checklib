@@ -22,6 +22,7 @@ my $tzil = Builder->from_config(
                         lib => [ qw(iconv jpeg) ],
                         libpath => 'additional_path',
                         symbol => [ qw(foo bar) ],
+                        systempath => 'system',
                     },
                 ],
             ),
@@ -56,6 +57,7 @@ check_lib_or_exit(
     lib => [ 'iconv', 'jpeg' ],
     libpath => 'additional_path',
     symbol => [ 'foo', 'bar' ],
+    systempath => 'system',
 );
 PATTERN
 
@@ -71,7 +73,7 @@ cmp_deeply(
         prereqs => superhashof({
             configure => {
                 requires => {
-                    'FFI::CheckLib' => '0.03',
+                    'FFI::CheckLib' => '0.11',
                     'ExtUtils::MakeMaker' => ignore,    # populated by [MakeMaker]
                 },
             },
@@ -86,6 +88,7 @@ cmp_deeply(
                             lib => [ 'iconv', 'jpeg' ],
                             libpath => [ 'additional_path' ],
                             symbol => [ 'foo', 'bar' ],
+                            systempath => [ 'system' ],
                         }),
                     },
                     name => 'FFI::CheckLib',
