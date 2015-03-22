@@ -16,7 +16,6 @@ my @list_options = qw/
   symbol
   systempath
 /;
-# FIXME recursive opt
 sub mvp_multivalue_args { @list_options }
 
 has $_ => (
@@ -27,11 +26,20 @@ has $_ => (
   handles => { $_ => 'elements' },
 ) for @list_options;
 
+has recursive => (
+  is      => 'rw',
+  lazy    => 1,
+  default => sub { 0 },
+);
+
 around dump_config => sub {
   my ($orig, $self) = @_;
   my $config = $self->$orig;
 
-  $config->{+__PACKAGE__} = +{ map {; $_ => [ $self->$_ ] } @list_options };
+  $config->{+__PACKAGE__} = +{ 
+    (map {; $_ => [ $self->$_ ] } @list_options),
+    recursive => $self->recursive,
+  };
 
   $config
 };
@@ -101,7 +109,7 @@ sub _munge_file {
       [ 
         $_ => @stuff > 1 ? ('[ ' . join(', ', @stuff) . ' ]') : $stuff[0]
       ] : ()
-  } @list_options;
+  } @list_options, 'recursive';
 
   $file->content(
       substr($orig_content, 0, $pos)

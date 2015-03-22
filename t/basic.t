@@ -23,6 +23,7 @@ my $tzil = Builder->from_config(
                         libpath => 'additional_path',
                         symbol => [ qw(foo bar) ],
                         systempath => 'system',
+                        recursive => 1,
                     },
                 ],
             ),
@@ -58,6 +59,7 @@ check_lib_or_exit(
     libpath => 'additional_path',
     symbol => [ 'foo', 'bar' ],
     systempath => 'system',
+    recursive => '1',
 );
 PATTERN
 
@@ -89,6 +91,7 @@ cmp_deeply(
                             libpath => [ 'additional_path' ],
                             symbol => [ 'foo', 'bar' ],
                             systempath => [ 'system' ],
+                            recursive => 1,
                         }),
                     },
                     name => 'FFI::CheckLib',
