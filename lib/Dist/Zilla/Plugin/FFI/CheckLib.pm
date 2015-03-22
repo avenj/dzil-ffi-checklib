@@ -166,6 +166,10 @@ Can be used more than once.
 L<FFI::CheckLib> will prepend C<lib> and append an appropriate dynamic library
 suffix as needed.
 
+=head2 C<symbol>
+
+A symbol that must be found. Can be used more than once.
+
 =head2 C<systempath>
 
 The system search path to use (instead of letting L<FFI::CheckLib> determine
@@ -175,9 +179,12 @@ paths). Can be used more than once.
 
 Additional path to search for libraries. Can be used more than once.
 
-=head2 C<symbol>
+=head2 C<recursive>
 
-A symbol that must be found. Can be used more than once.
+If set to true, directories specified in C<libpath> will be searched
+recursively.
+
+Defaults to false.
 
 =head1 SEE ALSO
 
