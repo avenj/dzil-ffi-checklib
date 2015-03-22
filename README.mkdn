@@ -33,13 +33,25 @@ Can be used more than once.
 [FFI::CheckLib](https://metacpan.org/pod/FFI::CheckLib) will prepend `lib` and append an appropriate dynamic library
 suffix as needed.
 
+## `symbol`
+
+A symbol that must be found. Can be used more than once.
+
+## `systempath`
+
+The system search path to use (instead of letting [FFI::CheckLib](https://metacpan.org/pod/FFI::CheckLib) determine
+paths). Can be used more than once.
+
 ## `libpath`
 
 Additional path to search for libraries. Can be used more than once.
 
-## `symbol`
+## `recursive`
 
-A symbol that must be found. Can be used more than once.
+If set to true, directories specified in `libpath` will be searched
+recursively.
+
+Defaults to false.
 
 # SEE ALSO
 
