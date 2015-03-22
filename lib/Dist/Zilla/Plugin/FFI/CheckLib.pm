@@ -1,4 +1,5 @@
 package Dist::Zilla::Plugin::FFI::CheckLib;
+
 use strict; use warnings;
 
 use Moose;
