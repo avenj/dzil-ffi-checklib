@@ -110,7 +110,7 @@ sub _munge_file {
       [ 
         $_ => @stuff > 1 ? ('[ ' . join(', ', @stuff) . ' ]') : $stuff[0]
       ] : ()
-  } @list_options, 'recursive';
+  } @list_options, ( $self->recursive ? 'recursive' : () );
 
   $file->content(
       substr($orig_content, 0, $pos)
